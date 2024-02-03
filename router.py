@@ -1,5 +1,7 @@
+from typing import Annotated
 from fastapi import Depends, APIRouter, HTTPException
 from sqlalchemy.orm import Session
+from auth.auth import get_current_active_user
 
 import crud, models, schemas
 from database import get_db
@@ -16,7 +18,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = crud.get_user_by_email(db, email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
-    return crud.create_user(db=db, user=user)
+    return crud.create_user(db, user=user)
 
 
 @router.get("/users/", response_model=list[schemas.User])
@@ -44,3 +46,20 @@ def create_item_for_user(
 def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     items = crud.get_items(db, skip=skip, limit=limit)
     return items
+
+
+@router.get("/users/{user_id}/items/")
+def get_item_for_user_all(
+        user_id: int, 
+        db: Session = Depends(get_db),
+):
+    return crud.get_item(db, user_id=user_id)
+
+
+@router.get("/{user_id}/items/")
+def get_item_user_all(
+        current_user: Annotated[models.User, Depends(get_current_active_user)],
+        db: Session = Depends(get_db),
+):
+    print('*' * 100) 
+    return crud.get_user(current_user.id, db)

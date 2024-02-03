@@ -7,14 +7,14 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 
-from schemas import User, UserInDB
-from auth.schemas import Token
+from schemas import User
+from auth.schemas import Token, TokenData
 import crud
 from database import get_db
 
 
 auth = APIRouter(
-    prefix='/v1/auth',
+    #prefix='/v1/auth',
     tags=['Auth']
 )
 
@@ -86,9 +86,10 @@ async def get_current_active_user(
 
 @auth.post("/token")
 async def login_for_access_token(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    db: Session = Depends(get_db)
 ) -> Token:
-    user = authenticate_user(get_db, form_data.username, form_data.password)
+    user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
