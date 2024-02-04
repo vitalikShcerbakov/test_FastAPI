@@ -11,9 +11,9 @@ import app.crud as crud
 from auth.schemas import TokenData
 from app.database import get_db
 from app.schemas import User
+from config import SECRET_KEY
 
 
-SECRET_KEY = "51bb228f2f993c8c77990f778d3b9bc2ab5c927a1bedc55da4be05a1e32f7c80"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
