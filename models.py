@@ -15,6 +15,8 @@ class User(Base):
 
     items = relationship("Item", back_populates="owner")
 
+    def __repr__(self):
+        return f'name: {self.username}, id: {self.id}'
 
 class Item(Base):
     __tablename__ = "items"

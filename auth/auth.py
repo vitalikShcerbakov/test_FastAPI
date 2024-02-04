@@ -36,7 +36,9 @@ def get_password_hash(password):
 
 
 def authenticate_user(username: str, password: str, db: Session = Depends(get_db)):
-    user = crud.get_user_by_name(db, username)
+    user = crud.get_user_by_name(username, db)  # Если меняешь местами, ошибка!
+    #   File "/project_FastAPI/crud.py", line 10, in get_user_by_name
+    # return db.query(models.User).filter(models.User.username == username).first()
     if not user:
         return False
     if not verify_password(password, user.hashed_password):
@@ -56,7 +58,8 @@ def create_access_token(
     return encoded_jwt
 
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)],
+                           db: Session = Depends(get_db)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -70,7 +73,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
         token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = crud.get_user_by_name(username=token_data.username, db=get_db())
+    user = crud.get_user_by_name(username=token_data.username, db=db)
     if user is None:
         raise credentials_exception
     return user
@@ -79,7 +82,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
 async def get_current_active_user(
     current_user: Annotated[User, Depends(get_current_user)]
 ):
-    if current_user.disabled:
+    if not current_user.is_active:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user
 

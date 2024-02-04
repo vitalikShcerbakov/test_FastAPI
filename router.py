@@ -56,10 +56,9 @@ def get_item_for_user_all(
     return crud.get_item(db, user_id=user_id)
 
 
-@router.get("/{user_id}/items/")
+@router.get("/{user_id}/")
 def get_item_user_all(
         current_user: Annotated[models.User, Depends(get_current_active_user)],
         db: Session = Depends(get_db),
 ):
-    print('*' * 100) 
-    return crud.get_user(current_user.id, db)
+    return crud.get_user(user_id=current_user.id, db=db)
