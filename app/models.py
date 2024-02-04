@@ -1,7 +1,7 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
-from database import Base
+from app.database import Base
 
 
 class User(Base):
@@ -17,6 +17,7 @@ class User(Base):
 
     def __repr__(self):
         return f'name: {self.username}, id: {self.id}'
+
 
 class Item(Base):
     __tablename__ = "items"

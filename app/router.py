@@ -1,11 +1,13 @@
 from typing import Annotated
-from fastapi import Depends, APIRouter, HTTPException
+
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+
+import app.crud as crud
+import app.models as models
+import app.schemas as schemas
 from auth.auth import get_current_active_user
-
-import crud, models, schemas
-from database import get_db
-
+from app.database import get_db
 
 router = APIRouter(
     prefix='/v1',
@@ -50,7 +52,7 @@ def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 
 @router.get("/users/{user_id}/items/")
 def get_item_for_user_all(
-        user_id: int, 
+        user_id: int,
         db: Session = Depends(get_db),
 ):
     return crud.get_item(db, user_id=user_id)

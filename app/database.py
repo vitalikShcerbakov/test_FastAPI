@@ -2,6 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
+
 SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
 # DATABASE_URL = f'postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
 
@@ -20,6 +21,7 @@ def get_db():
         yield db
     finally:
         db.close()
+
 
 # Создание таблицы
 Base.metadata.create_all(bind=engine)
