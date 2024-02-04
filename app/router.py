@@ -24,24 +24,18 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
 
 @router.get("/users/", response_model=list[schemas.User])
-def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def read_users_all(
+        skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     users = crud.get_users(db, skip=skip, limit=limit)
     return users
 
 
-@router.get("/users/{user_id}", response_model=schemas.User)
-def read_user(user_id: int, db: Session = Depends(get_db)):
-    db_user = crud.get_user(db, user_id=user_id)
-    if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return db_user
-
-
-@router.post("/users/{user_id}/items/", response_model=schemas.Item)
-def create_item_for_user(
-    user_id: int, item: schemas.ItemCreate, db: Session = Depends(get_db)
+@router.post("/users/items/", response_model=schemas.Item)
+def create_item(
+    current_user: Annotated[models.User, Depends(get_current_active_user)],
+    item: schemas.ItemCreate, db: Session = Depends(get_db)
 ):
-    return crud.create_user_item(db=db, item=item, user_id=user_id)
+    return crud.create_user_item(db=db, item=item, user_id=current_user.id)
 
 
 @router.get("/items/", response_model=list[schemas.Item])
@@ -50,16 +44,16 @@ def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return items
 
 
-@router.get("/users/{user_id}/items/")
+@router.get("/users/items/")
 def get_item_for_user_all(
-        user_id: int,
+        current_user: Annotated[models.User, Depends(get_current_active_user)],
         db: Session = Depends(get_db),
 ):
-    return crud.get_item(db, user_id=user_id)
+    return crud.get_item(db, user_id=current_user.id)
 
 
-@router.get("/{user_id}/")
-def get_item_user_all(
+@router.get("/users/me/")
+def get_user_me(
         current_user: Annotated[models.User, Depends(get_current_active_user)],
         db: Session = Depends(get_db),
 ):

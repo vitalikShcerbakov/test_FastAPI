@@ -11,7 +11,6 @@ from auth.schemas import Token
 from app.database import get_db
 
 auth = APIRouter(
-    prefix='/auth',
     tags=['Auth']
 )
 

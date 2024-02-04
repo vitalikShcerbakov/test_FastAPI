@@ -42,7 +42,7 @@ def get_items(db: Session, skip: int = 0, limit: int = 100):
 def get_item(db: Session, user_id: int):
     return db.query(
         models.User).filter(
-            models.User.id == user_id).first()
+            models.User.id == user_id).first().items
 
 
 def create_user_item(db: Session, item: schemas.ItemCreate, user_id: int):
