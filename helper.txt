@@ -1,6 +1,0 @@
-# alembic
-alembic init migrations
-alembic revision --autogenerate -m 'Inital'
-https://specialistoff.net/page/324
-
----------------------------------------------------------------------------------------------------------------------------

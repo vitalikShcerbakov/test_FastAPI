@@ -1,5 +1,8 @@
-venv
-env
+.venv
+.env
+env/
+venv/
 *.sqlite3
 *.db
-__pycache__
+__pycache__/
+*.txt
