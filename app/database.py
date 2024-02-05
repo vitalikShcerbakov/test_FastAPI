@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 
 
 metadata = MetaData()
-SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./db.sqlite3"
 # DATABASE_URL = f'postgresql+asyncpg://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
 
 engine = create_engine(
