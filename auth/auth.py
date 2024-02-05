@@ -11,7 +11,7 @@ import app.crud as crud
 from auth.schemas import TokenData
 from app.database import get_db
 from app.schemas import User
-from config import SECRET_KEY
+from my_config import SECRET_KEY
 
 
 ALGORITHM = "HS256"
